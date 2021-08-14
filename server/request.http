@@ -1,0 +1,61 @@
+POST http://localhost:5000/api/users/register
+Content-Type: application/json
+
+{
+    "email": "thanh.nth@gmail.com",
+    "password": "123456",
+    "name": "thanh.nth",
+    "lastname": "nth"
+}
+
+###
+POST http://localhost:5000/api/users/login
+Content-Type: application/json
+
+{
+    "email": "thanh.nth@gmail.com",
+    "password": "123456"
+}
+
+###
+POST http://localhost:5000/api/users/login
+Content-Type: application/json
+
+{
+    "email": "huy.dd176782@sis.hust.edu.vn",
+    "password": "123456"
+}
+
+###
+POST http://localhost:8000/api/posts
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTBmM2U0YjdiMjhkZTBmZTc0NGRmMmIiLCJpYXQiOjE2Mjg1ODQyMDF9.9pFWSCCr89o-8KSC2k55mzjrhxecB5VaI33crsZjtm4
+
+{
+    "title": "My second post",
+    "description": "Learing Vuejs",
+    "url": "vuejs.com",
+    "status": "LEARNING"
+}
+###
+GET http://localhost:8000/api/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTBmM2U0YjdiMjhkZTBmZTc0NGRmMmIiLCJpYXQiOjE2Mjg1ODQyMDF9.9pFWSCCr89o-8KSC2k55mzjrhxecB5VaI33crsZjtm4
+
+
+###
+
+PUT http://localhost:6000/api/posts/610f4e3c6c166828b78f329e
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTBmM2U0YjdiMjhkZTBmZTc0NGRmMmIiLCJpYXQiOjE2MjgzOTY2OTJ9.e2GwHwhTK-eZX-2JZUM-X_TC-9PtpyPPi9n9uHyCaDo
+
+{
+    "title": "Vuejs - edited",
+    "description": "Vueeee",
+    "url": "vuejs.js",
+    "status": "LEARNING"
+}
+
+###
+DELETE http://localhost:6000/api/posts/610f4e3c6c166828b78f329e
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTBmM2U0YjdiMjhkZTBmZTc0NGRmMmIiLCJpYXQiOjE2MjgzOTY2OTJ9.e2GwHwhTK-eZX-2JZUM-X_TC-9PtpyPPi9n9uHyCaDo
