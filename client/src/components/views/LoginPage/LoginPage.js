@@ -19,6 +19,8 @@ function LoginPage(props) {
     setRememberMe(!rememberMe)
   };
 
+  // props.setupSocket()
+
   const initialEmail = localStorage.getItem("rememberMe") ? localStorage.getItem("rememberMe") : '';
 
   return (

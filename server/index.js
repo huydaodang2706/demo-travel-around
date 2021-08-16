@@ -8,7 +8,7 @@ const userRoute = require('./routes/users')
 
 const config = require("./config/key");
 // const session = require('express-')
-
+const socket = require("socket.io");
 
 
 const connectDB = async () => {
@@ -68,3 +68,4 @@ const server = app.listen(port, () => {
 
 var sockets = require('./socket')
 sockets.init(server)
+
