@@ -18,7 +18,7 @@ function RightMenu(props) {
       }
     });
   };
-
+  // console.log(user)
   if (user.userData && !user.userData.isAuth) {
     return (
       <Menu mode={props.mode}>

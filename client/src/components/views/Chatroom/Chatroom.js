@@ -22,16 +22,22 @@ export default function Chatroom(props) {
     socket.on("receive_message", (data) => {
       setMessageList([...messageList, data]);
     });
+    
+  }, []);
+  useEffect(() => {
     console.log('UserID:' + userID)
     console.log('Username:' + username)
     console.log('User data:' + user)
+    if (userID !== ''){
+      socket.emit('load-user-infor-done',{})
+    }
     socket.on("get-user-info", (socketId) => {
       socket.emit("send-user-info", {
         socketId: socketId,
         userId: userID
       })
     })
-  }, []);
+  }, [userID])
 
   const connectToRoom = () => {
     setLoggedIn(true);

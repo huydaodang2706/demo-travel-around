@@ -27,13 +27,13 @@ export function loginUser(dataToSubmit){
     }
 }
 
-export function auth(){
-    const request = axios.get(`${USER_SERVER}/auth`)
-    .then(response => response.data);
+export const auth = async () => {
+    const response = await axios.get(`${USER_SERVER}/auth`)
 
+    console.log('Request response: ' +  JSON.stringify(response.data))
     return {
         type: AUTH_USER,
-        payload: request
+        payload: response.data
     }
 }
 

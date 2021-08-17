@@ -6,13 +6,15 @@ import {
 } from '../_actions/types';
  
 
-export default function(state={},action){
+const user = (state={},action) => {
     switch(action.type){
         case REGISTER_USER:
+            // console.log(action.payload)
             return {...state, register: action.payload }
         case LOGIN_USER:
             return { ...state, loginSucces: action.payload }
         case AUTH_USER:
+            // console.log('Auth user data: ' + JSON.stringify(action.payload))
             return {...state, userData: action.payload }
         case LOGOUT_USER:
             return {...state }
@@ -20,3 +22,5 @@ export default function(state={},action){
             return state;
     }
 }
+
+export default user

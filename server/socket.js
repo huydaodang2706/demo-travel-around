@@ -38,7 +38,9 @@ sockets.init = (server) => {
     console.log("Connected: " + socket.id);
 
     // Text chat room
-    io.to(socket.id).emit("get-user-info", socket.id);
+    socket.on('load-user-infor-done',({}) => {
+      io.to(socket.id).emit("get-user-info", socket.id);
+    })
   
     socket.on("join_room", (data) => {
       socket.join(data);
@@ -54,9 +56,12 @@ sockets.init = (server) => {
     // Video chat room
 
     socket.on("send-user-info", ({ socketId, userId }) => {
-      addConnectedQueue(connectedQueue, socketId, userId);
+      if (userId !== ''){
+        addConnectedQueue(connectedQueue, socketId, userId);  
+      }
       console.log(`socketId: ${socketId}`)
       console.log(`userId: ${userId}`)
+
     });
 
     socket.on("disconnect", () => {
