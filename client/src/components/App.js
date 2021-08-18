@@ -39,11 +39,10 @@ function App(props) {
       <NavBar />
       <div style={{ paddingTop: "69px", minHeight: "calc(100vh - 80px)" }}>
         <Switch>
-          <Route exact path="/" component={Auth(LandingPageWithSocket, null)} />
+          <Route exact path="/" component={Auth(LandingPageWithSocket, true)} />
           <Route exact path="/login" component={Auth(LoginPageWithSocket, false)} />
           <Route exact path="/register" component={Auth(RegisterPage, false)} />
-          {/* <Route exact path="/" render={(props) => <Dashboard {...props} handleClick={_this.handleClick} />} />
-        <Route path="/Bldgs" component={Bldgs} curTab={selectedTab} /> */}
+          
           <Route
             exact
             path="/chatroom"
