@@ -6,7 +6,7 @@ body {
     display: grid;
     place-items: center;
     height: 100vh;
-    background-color: #2a2730;
+    background-color: white;
   }
   
   .logIn {

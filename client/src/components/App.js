@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch ,withRouter} from "react-router-dom";
 import Auth from "../hoc/auth";
 // pages for this product
 import { useEffect } from "react";
@@ -14,7 +14,7 @@ import io from "socket.io-client";
 //true   only logged in user can go inside
 //false  logged in user can't go inside
 let socket;
-function App() {
+function App(props) {
   const CONNECTION_PORT = "localhost:5000/";
   const socket = io(CONNECTION_PORT, {});
 
@@ -31,17 +31,19 @@ function App() {
   // useEffect(() => {
   //   setupSocket();
   // }, [CONNECTION_PORT]);
-
-  const LoginPageWithSocket = () => (<LoginPage  />)
+  const LandingPageWithSocket = () => (<LandingPage socket={socket}/>)
+  const LoginPageWithSocket = () => (<LoginPage socket={socket} />)
   const ChatroomWithSocket = () => <Chatroom socket={socket} />;
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <NavBar />
       <div style={{ paddingTop: "69px", minHeight: "calc(100vh - 80px)" }}>
         <Switch>
-          <Route exact path="/" component={Auth(LandingPage, null)} />
+          <Route exact path="/" component={Auth(LandingPageWithSocket, null)} />
           <Route exact path="/login" component={Auth(LoginPageWithSocket, false)} />
           <Route exact path="/register" component={Auth(RegisterPage, false)} />
+          {/* <Route exact path="/" render={(props) => <Dashboard {...props} handleClick={_this.handleClick} />} />
+        <Route path="/Bldgs" component={Bldgs} curTab={selectedTab} /> */}
           <Route
             exact
             path="/chatroom"
@@ -54,4 +56,4 @@ function App() {
   );
 }
 
-export default App;
+export default withRouter(App);

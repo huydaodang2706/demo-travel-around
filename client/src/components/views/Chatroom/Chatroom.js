@@ -4,51 +4,90 @@ import "./Chatroom.css";
 // import io from "socket.io-client";
 
 export default function Chatroom(props) {
-  let socket = props.socket
+  let socket = props.socket;
   //   const chatroomID = window.location.href.split("/")[5]
   const user = useSelector((state) => state.user);
   let userID = user.userData ? user.userData._id : "";
   let username = user.userData ? user.userData.name : "";
-
+  const [socketId, setSocketId] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
-  const [room, setRoom] = useState("");
+  const [guilderId, setGuilderId] = useState("");
   const [userName, setUserName] = useState("");
-
+  const [roomId, setRoomId] = useState("");
   // After Login
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
 
   useEffect(() => {
+
+    socket.on("joinRoom-announce", ({ username }) => {
+      console.log(`the user ${username} has join the room with us`);
+    });
     socket.on("receive_message", (data) => {
       setMessageList([...messageList, data]);
     });
-    
-  }, []);
+  },[])
   useEffect(() => {
-    console.log('UserID:' + userID)
-    console.log('Username:' + username)
-    console.log('User data:' + user)
-    if (userID !== ''){
-      socket.emit('load-user-infor-done',{})
+    
+    if (username !== ""){
+      socket.on("connect-success", ({ roomId }) => {
+        setLoggedIn(true);
+        setRoomId(roomId)
+        socket.emit("joinRoom", {roomId, username});
+        console.log('Connect success and client send joinRoom package')
+      });
+  
     }
-    socket.on("get-user-info", (socketId) => {
-      socket.emit("send-user-info", {
-        socketId: socketId,
-        userId: userID
+  }, [username]);
+  useEffect(() => {
+    // console.log("UserID:" + userID);
+    // console.log("Username:" + username);
+    // console.log("User data:" + user);
+    if (userID !== "") {
+      socket.emit("load-user-infor-done", {});
+    }
+    if (userID !== "" && socketId !== ""){
+      socket.on("request-connect", ({requestId, requestSocketId, roomType}) => {
+        console.log(`Socket id in request-connect ${socketId}`)
+        socket.emit('accept-connect', {
+          guilderId: userID,
+          guilderSocketId: socketId,
+          userId: requestId,
+          userSocketId: requestSocketId,
+          roomType: roomType
+        })
+        console.log('Guilder receive request-connect package and emit accept-connect package')
       })
-    })
-  }, [userID])
+    }
 
-  const connectToRoom = () => {
-    setLoggedIn(true);
-    socket.emit("join_room", room);
+    socket.on("get-user-info", (socket_Id) => {
+      setSocketId(socket_Id);
+      socket.emit("send-user-info", {
+        socketId: socket_Id,
+        userId: userID,
+      });
+    });
+
+  }, [userID, socketId]);
+
+  const connectToGuilder = () => {
+    // console.log(socketId)
+    socket.emit("request-guilder", {
+      socketId: socketId,
+      userId: userID,
+      username: username,
+      roomType: "video-call",
+      guilderId: guilderId,
+    });
+    console.log('Emit package request-guilder')
+
   };
 
   const sendMessage = async () => {
     let messageContent = {
-      room: room,
+      room: roomId,
       content: {
-        author: userName,
+        author: username,
         message: message,
       },
     };
@@ -70,15 +109,16 @@ export default function Chatroom(props) {
                 setUserName(e.target.value);
               }}
             />
+            {/* Input Partner ID */}
             <input
               type="text"
-              placeholder="Room..."
+              placeholder="Guilder ID..."
               onChange={(e) => {
-                setRoom(e.target.value);
+                setGuilderId(e.target.value);
               }}
             />
           </div>
-          <button onClick={connectToRoom}>Enter Chat</button>
+          <button onClick={connectToGuilder}>Enter Chat</button>
         </div>
       ) : (
         <div className="chatContainer">

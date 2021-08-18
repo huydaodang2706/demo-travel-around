@@ -58,9 +58,10 @@ sockets.init = (server) => {
     socket.on("send-user-info", ({ socketId, userId }) => {
       if (userId !== ''){
         addConnectedQueue(connectedQueue, socketId, userId);  
+      
+        console.log(`socketId: ${socketId}`)
+        console.log(`userId: ${userId}`)
       }
-      console.log(`socketId: ${socketId}`)
-      console.log(`userId: ${userId}`)
 
     });
 
@@ -71,16 +72,17 @@ sockets.init = (server) => {
 
     //Send a prompt to request for a call to guilder socket
     socket.on("request-guilder",({ socketId, userId, username, roomType, guilderId }) => {
-        let userInfo = {
+      console.log(`Server receive package request-guilder from ${userId} and send to ${guilderId}`)  
+      let userInfo = {
           socketId: socketId,
           userId: userId,
           username: username,
           roomType: roomType,
           guilderId: guilderId,
         };
-        if (inputType === "video-call") {
+        if (roomType === "video-call") {
           // Search for guilder socket
-          guilderSocketIndex = searchGuilderId(
+          guilderIndex = searchGuilderId(
             connectedQueue,
             userInfo.guilderId
           );
@@ -109,7 +111,10 @@ sockets.init = (server) => {
             io.to(guilderSocketId).emit('connect-success',({
                 roomId: roomId
             }))                
-        } catch (error) {
+            console.log(`Server receive accept-connect package from guilder ${guilderId}`)
+            console.log(`userSocketId: ${userSocketId}, guillderSocketId: ${guilderSocketId}
+            ----------------------------------------------`)
+          } catch (error) {
         console.log(error)            
         }
     })
@@ -120,19 +125,20 @@ sockets.init = (server) => {
     })
 
     //Join room 
-    socket.on('joinRoom', ({chatRoomId, username}) => {
-        socket.join(chatRoomId)
-        console.log(`The user ${username} has joined chatroom: ${chatRoomId}`)
-        io.to(chatRoomId).emit('joinRoom-announce', {
+    socket.on('joinRoom', ({roomId, username}) => {
+        socket.join(roomId)
+        console.log(`The user ${username} has joined chatroom: ${roomId}`)
+        io.to(roomId).emit('joinRoom-announce', {
             username: username
         })
+        console.log('Server receive joinRoom package from both user and guilder')
     })
 
     //Leave room
-    socket.on('leave-room', ({chatRoomId, username}) => {
-        socket.leave(chatRoomId)
-        console.log(`The user ${username} has left chatroom: ${chatRoomId}`)
-        io.to(chatRoomId).emit('leaveRoom-announce', {
+    socket.on('leave-room', ({roomId, username}) => {
+        socket.leave(roomId)
+        console.log(`The user ${username} has left chatroom: ${roomId}`)
+        io.to(roomId).emit('leaveRoom-announce', {
             username: username
         })
     })
